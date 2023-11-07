@@ -1,0 +1,172 @@
+:root {
+  font-family: "Press Start 2P", monospace;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+.theme-color {
+  // When body has class .theme-color
+  --primary-color: #5b6dc8;
+  --background-color: #003ce2;
+  --text-color: #fcff46;
+
+  --ink0: #000000; /* Black */
+  --ink1: #000080; /* Blue */
+  --ink2: #0000ff; /* Bright Blue */
+  --ink3: #800000; /* Red */
+  --ink4: #800080; /* Magenta */
+  --ink5: #8000ff; /* Mauve */
+  --ink6: #ff0000; /* Bright Red */
+  --ink7: #ff0080; /* Purple */
+  --ink8: #ff00ff; /* Bright Magenta */
+  --ink9: #008000; /* Green */
+  --ink10: #008080; /* Cyan */
+  --ink11: #0080ff; /* Sky Blue */
+  --ink12: #808000; /* Yellow */
+  --ink13: #808080; /* White */
+  --ink14: #8080ff; /* Pastel Blue */
+  --ink15: #ff8000; /* Orange */
+  --ink16: #ff8080; /* Pink */
+  --ink17: #ff80ff; /* Pastel Magenta */
+  --ink18: #00ff00; /* Bright Green */
+  --ink19: #00ff80; /* Sea Green */
+  --ink20: #00ffff; /* Bright Cyan */
+  --ink21: #80ff00; /* Lime */
+  --ink22: #80ff80; /* Pastel Green */
+  --ink23: #80ffff; /* Pastel Cyan */
+  --ink24: #ffff00; /* Bright Yellow */
+  --ink25: #ffff80; /* Pastel Yellow */
+  --ink26: #ffffff; /* Bright White */
+}
+
+.theme-green {
+  // When body has class .theme-green
+  --primary-color: #58c87c;
+  --background-color: #001f00;
+  --text-color: #00b445;
+
+  --ink0: #0d0d0d; /* Black */
+  --ink1: #003300; /* Blue */
+  --ink2: #005700; /* Bright Blue */
+  --ink3: #007d00; /* Red */
+  --ink4: #009d00; /* Magenta */
+  --ink5: #00bd00; /* Mauve */
+  --ink6: #00dd00; /* Bright Red */
+  --ink7: #00ee00; /* Purple */
+  --ink8: #004d15; /* Bright Magenta */
+  --ink9: #006d3a; /* Green */
+  --ink10: #008d5e; /* Cyan */
+  --ink11: #00ae83; /* Sky Blue */
+  --ink12: #00ce00; /* Yellow */
+  --ink13: #00ee00; /* White */
+  --ink14: #00e80a; /* Pastel Blue */
+  --ink15: #004830; /* Orange */
+  --ink16: #006810; /* Pink */
+  --ink17: #008810; /* Pastel Magenta */
+  --ink18: #00ff00; /* Bright Green */
+  --ink19: #00c960; /* Sea Green */
+  --ink20: #00e960; /* Bright Cyan */
+  --ink21: #80ff00; /* Lime */
+  --ink22: #80ff80; /* Pastel Green */
+  --ink23: #005e1e; /* Pastel Cyan */
+  --ink24: #008040; /* Bright Yellow */
+  --ink25: #00a160; /* Pastel Yellow */
+  --ink26: #00c340; /* Bright White */
+}
+
+.theme-grayscale {
+  // When body has class .theme-grayscale
+  --primary-color: #a5a5a5;
+  --background-color: #2a2a2a;
+  --text-color: #f5f5f5;
+
+  --ink0: #000000; /* Black */
+  --ink1: #0a0a0a; /* Blue */
+  --ink2: #151515; /* Bright Blue */
+  --ink3: #202020; /* Red */
+  --ink4: #2b2b2b; /* Magenta */
+  --ink5: #353535; /* Mauve */
+  --ink6: #404040; /* Bright Red */
+  --ink7: #4b4b4b; /* Purple */
+  --ink8: #555555; /* Bright Magenta */
+  --ink9: #606060; /* Green */
+  --ink10: #6a6a6a; /* Cyan */
+  --ink11: #757575; /* Sky Blue */
+  --ink12: #808080; /* Yellow */
+  --ink13: #8a8a8a; /* White */
+  --ink14: #959595; /* Pastel Blue */
+  --ink15: #9f9f9f; /* Orange */
+  --ink16: #aaaaaa; /* Pink */
+  --ink17: #b4b4b4; /* Pastel Magenta */
+  --ink18: #bfbfbf; /* Bright Green */
+  --ink19: #c9c9c9; /* Sea Green */
+  --ink20: #d4d4d4; /* Bright Cyan */
+  --ink21: #dedede; /* Lime */
+  --ink22: #e9e9e9; /* Pastel Green */
+  --ink23: #f3f3f3; /* Pastel Cyan */
+  --ink24: #fdfdfd; /* Bright Yellow */
+  --ink25: #ffffff; /* Pastel Yellow pushed to White*/
+  --ink26: #ffffff; /* Bright White */
+}
+body {
+  font-family: "Press Start 2P", monospace;
+  font-size: 16px;
+  background-color: var(--ink1); // using CSS variable
+  color: var(--ink24); // using CSS variable
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  a {
+    font-weight: 500;
+    color: var(--ink26);
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: (var(--ink24));
+  }
+  li {
+    list-style-type: none;
+  }
+
+  // h1 {
+  //   font-size: 3.2em;
+  //   line-height: 1.1;
+  // }
+
+  button {
+    border-radius: 2px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--ink24);
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  button:hover {
+    border-color: var(--ink25);
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+}
+
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */

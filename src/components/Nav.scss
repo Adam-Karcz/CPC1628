@@ -1,0 +1,12 @@
+Nav {
+  align-self: flex-start;
+
+  ul {
+    display: flex;
+    li {
+      margin: 0 1rem;
+      padding: 0.4rem;
+      background-color: var(--ink2);
+    }
+  }
+}
