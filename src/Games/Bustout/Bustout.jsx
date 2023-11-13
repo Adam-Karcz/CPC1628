@@ -14,18 +14,54 @@ function Bustout() {
   const computedStyle = getComputedStyle(document.body);
   const theme = useSelector((state) => state.theme);
   const playSound = useSound();
+  const [bricks, setBricks] = useState([]);
 
   const [paddle, setPaddle] = useState({
     x: 33, // Temp initial value must be within game field range to be cleared after initial render
     y: 422, // Temp initial value must be within game field range to be cleared after initial render
     width: 75,
-    height: 10,
-    dx: 5, // how much the paddle moves per frame
+    height: 8,
+    dx: 8, // how much the paddle moves per frame
   });
 
   //   const [score, setScore] = useState(0);
   //   const [lives, setLives] = useState(5);
   //   const [highScore, setHighScore] = useState(0);
+
+  useEffect(() => {
+    const rows = 5;
+    const cols = 72;
+    const brickWidth = 8;
+    const brickHeight = 8;
+    const emptyRows = [1, 2]; // Rows that should be empty
+    const redRow = 3; // The row index where the red row starts
+
+    const newBricks = Array.from({ length: rows }, (_, r) => {
+      // Skip the generation of bricks for empty rows
+      if (!emptyRows.includes(r)) {
+        return Array.from({ length: cols }, (_, c) => {
+          let color;
+          if (r === 0 || r === 4) {
+            color = computedStyle.getPropertyValue("--ink13"); // Assuming this is white
+          } else if (r === redRow) {
+            color = computedStyle.getPropertyValue("--ink3"); // Assuming this is red
+          }
+
+          return {
+            x: c * brickWidth + 32,
+            y: r * brickHeight + 32,
+            width: brickWidth,
+            height: brickHeight,
+            hit: false,
+            color: color,
+          };
+        });
+      }
+      return []; // Return an empty array for empty rows
+    }).flat();
+
+    setBricks(newBricks);
+  }, []);
 
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
@@ -134,9 +170,23 @@ function Bustout() {
     ctx.closePath();
   };
 
+  const drawBricks = () => {
+    const ctx = canvasRef.current.getContext("2d");
+    bricks.forEach((brick) => {
+      if (!brick.hit) {
+        ctx.beginPath();
+        ctx.rect(brick.x, brick.y, brick.width, brick.height);
+        ctx.fillStyle = brick.color; // Change as needed
+        ctx.fill();
+        ctx.closePath();
+      }
+    });
+  };
+
   // Game loop
   const gameLoop = () => {
     requestAnimationFrame(gameLoop);
+    drawBricks();
     // clearCanvas(); // Clear the canvas for the new drawing
     // drawPaddle(); // Draw the paddle
   };
@@ -145,7 +195,7 @@ function Bustout() {
   const drawPaddle = () => {
     if (!canvasRef.current) return;
     const ctx = canvasRef.current.getContext("2d");
-    ctx.fillStyle = computedStyle.getPropertyValue("--ink11");
+    ctx.fillStyle = computedStyle.getPropertyValue("--ink13");
     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
     console.log("X,Y:", paddle.x, paddle.y);
   };
@@ -162,6 +212,7 @@ function Bustout() {
       canvasRef.current.width - 64,
       gameAreaHeight
     );
+    console.log("canvas width:", canvasRef.current.width - 64);
   };
 
   // SOUND testing
