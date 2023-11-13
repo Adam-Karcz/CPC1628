@@ -6,14 +6,22 @@ import {
   playBallSound,
   lostLifeSound,
   winSound,
-  testSoundParams,
 } from "./soundDefinitions";
 import "./Bustout.css";
 
 function Bustout() {
   const canvasRef = useRef(null);
+  const computedStyle = getComputedStyle(document.body);
   const theme = useSelector((state) => state.theme);
   const playSound = useSound();
+
+  const [paddle, setPaddle] = useState({
+    x: 33, // Temp initial value must be within game field range to be cleared after initial render
+    y: 422, // Temp initial value must be within game field range to be cleared after initial render
+    width: 75,
+    height: 10,
+    dx: 5, // how much the paddle moves per frame
+  });
 
   //   const [score, setScore] = useState(0);
   //   const [lives, setLives] = useState(5);
@@ -38,14 +46,54 @@ function Bustout() {
   }, [theme]);
   console.log(theme);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!canvasRef.current) return;
+
+      const rightEdge = canvasRef.current.width - paddle.width - 32; //Hardcoded from drawBorders/clearCanvas consider pull up some variables
+      const leftEdge = 32; //Hardcoded from drawBorders/clearCanvas consider pull up some variables
+
+      if (e.key === "ArrowRight") {
+        // Move paddle right
+        setPaddle((prev) => ({
+          ...prev,
+          x: Math.min(prev.x + prev.dx, rightEdge),
+        }));
+      } else if (e.key === "ArrowLeft") {
+        // Move paddle left
+        setPaddle((prev) => ({
+          ...prev,
+          x: Math.max(prev.x - prev.dx, leftEdge),
+        }));
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [paddle.dx, paddle.width]);
+
+  useEffect(() => {
+    gameLoop();
+  }, []);
+
+  useEffect(() => {
+    // This effect will re-draw the paddle whenever its state changes
+    clearCanvas();
+    drawPaddle();
+  }, [paddle]);
+
   const setupGraphics = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
 
     // Access CSS variable values
-    const computedStyle = getComputedStyle(document.body);
-    const fillColor = computedStyle.getPropertyValue("--ink1").trim();
-    const strokeColor = computedStyle.getPropertyValue("--ink25").trim();
+
+    const fillColor = computedStyle.getPropertyValue("--ink1");
+    const strokeColor = computedStyle.getPropertyValue("--ink25");
 
     // Set the canvas size to fill the parent
     canvas.width = canvas.offsetWidth;
@@ -54,14 +102,17 @@ function Bustout() {
     // Set the default styles
     ctx.fillStyle = fillColor;
     ctx.strokeStyle = strokeColor;
-    console.log("Stroke Color:", strokeColor); //TODO: remove when handle redux
-    console.log("Fill Color:", fillColor);
 
     // Clear
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // next - draw game elements
     drawBorders(ctx, strokeColor);
+    setPaddle({
+      ...paddle,
+      x: canvas.width / 2 - paddle.width / 2,
+      y: canvas.height - 48 - paddle.height,
+    });
   };
 
   // Function to draw the game borders
@@ -70,8 +121,7 @@ function Bustout() {
     ctx.beginPath();
     // Set the border color
     ctx.strokeStyle = strokeColor;
-    ctx.lineWidth = 3; // Example border width
-
+    ctx.lineWidth = 3;
     //left border
     ctx.moveTo(30, 32);
     ctx.lineTo(30, 432); // Assuming 400 is the height plus the starting Y
@@ -84,6 +134,36 @@ function Bustout() {
     ctx.closePath();
   };
 
+  // Game loop
+  const gameLoop = () => {
+    requestAnimationFrame(gameLoop);
+    // clearCanvas(); // Clear the canvas for the new drawing
+    // drawPaddle(); // Draw the paddle
+  };
+
+  // Function to draw the paddle
+  const drawPaddle = () => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.fillStyle = computedStyle.getPropertyValue("--ink11");
+    ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    console.log("X,Y:", paddle.x, paddle.y);
+  };
+
+  // Make sure to clear the previous paddle drawing every frame
+  const clearCanvas = () => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+    const gameAreaTop = 32; // Assuming this is where your game area starts
+    const gameAreaHeight = 400; // Adjust as needed for your game area
+    ctx.clearRect(
+      32,
+      gameAreaTop,
+      canvasRef.current.width - 64,
+      gameAreaHeight
+    );
+  };
+
   // SOUND testing
 
   const gameSound = (soundParams) => {
@@ -93,7 +173,13 @@ function Bustout() {
   return (
     <div>
       <h1>Bustout Game</h1>
-      <canvas ref={canvasRef} id="gameCanvas" width="640" height="480"></canvas>
+      <canvas
+        ref={canvasRef}
+        key={theme}
+        id="gameCanvas"
+        width="640"
+        height="480"
+      ></canvas>
       <div>
         <button onClick={() => gameSound(hitWallSound)}>HIT WALL</button>
         <button onClick={() => gameSound(playBallSound)}>BALL</button>
